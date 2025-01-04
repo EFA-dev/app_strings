@@ -1,5 +1,3 @@
-[<img src="https://raw.githubusercontent.com/EFA-dev/app_strings/main/assets/app_strings_cover.png"  height="320">](https://www.youtube.com/watch?v=c3G9xEA4PQg)
-
 A build_runner package for managing app language files.
 
 This package helps you to manage your app's language files in a single Dart file. It enables you to generate JSON files or easy_localization key and loader classes from the Dart file.

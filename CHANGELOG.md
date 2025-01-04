@@ -1,3 +1,6 @@
+## 1.1.1
+- Update README.md
+
 ## 1.1.0
 - Update dependencies
 - Add support for new dart style
