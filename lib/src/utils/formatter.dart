@@ -7,7 +7,7 @@ import 'package:dart_style/dart_style.dart';
 class Formatter {
   static String format(Library library) {
     final emitter = CustomEmitter();
-    return DartFormatter().format('${library.accept(emitter)}');
+    return DartFormatter(languageVersion: DartFormatter.latestLanguageVersion).format('${library.accept(emitter)}');
   }
 }
 // endregion

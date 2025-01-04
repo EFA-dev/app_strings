@@ -1,0 +1,17 @@
+name: app_strings_example
+description: A sample project for app_strings.
+version: 1.0.0
+publish_to: none
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  app_strings:
+    path: ../
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.24.0
+  build_runner: ^2.4.14

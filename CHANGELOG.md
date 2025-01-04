@@ -1,3 +1,7 @@
+## 1.1.0
+- Update dependencies
+- Add support for new dart style
+- Add example project
 
 ## 1.0.3
 - Remove unnecessary escape character replacements
