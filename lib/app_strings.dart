@@ -1,3 +1,3 @@
-library app_strings;
+library;
 
 export 'annotations/app_strings_config.dart';

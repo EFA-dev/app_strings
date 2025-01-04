@@ -2,36 +2,52 @@ builders:
 
   # The Import builder is creating the cache directory because it modifies the existing file
   # It runs before all other builders since the newly created file will be used by them
-  app_strings_importer_builder:
+  importer_builder:
     import: "package:app_strings/builder.dart"    
-    builder_factories: [ "appStringsImportBuilder"]
-    runs_before: [:app_strings_loader_builder, :app_strings_key_builder, :app_strings_json_builder]    
+    builder_factories: [ "importBuilder"]
     build_extensions: {".dart": [".importer.dart"]}
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen"]
-    
-  app_strings_loader_builder:
-    import: "package:app_strings/builder.dart"    
-    builder_factories: [ "appStringsLoaderBuilder"]    
-    build_extensions: {".dart": [".loader.dart"]}
-    auto_apply: dependents
-    build_to: source
-    applies_builders: ["source_gen"]
+    runs_before: ["key_builder","loader_builder","json_builder"]
+    defaults:
+      generate_for:
+        - lib/lang/*.dart
+        - lib/generated/*.dart
 
-  app_strings_key_builder:
+  key_builder:
     import: "package:app_strings/builder.dart"    
-    builder_factories: [ "appStringsKeyBuilder"]    
+    builder_factories: [ "keyBuilder"]    
     build_extensions: {".dart": [".key.dart"]}
     auto_apply: dependents
     build_to: source
     applies_builders: ["source_gen"]
+    defaults:
+      generate_for:
+        - lib/lang/*.dart
+        - lib/generated/*.dart
 
-  app_strings_json_builder:
+  loader_builder:
     import: "package:app_strings/builder.dart"    
-    builder_factories: [ "appStringsJsonBuilder"]    
+    builder_factories: [ "loaderBuilder"]    
+    build_extensions: {".dart": [".loader.dart"]}
+    auto_apply: dependents
+    build_to: source
+    applies_builders: ["source_gen"]
+    defaults:
+      generate_for:
+        - lib/lang/*.dart
+        - lib/generated/*.dart
+
+  json_builder:
+    import: "package:app_strings/builder.dart"    
+    builder_factories: [ "jsonBuilder"]    
     build_extensions: {".dart": [".json"]}
     auto_apply: dependents
     build_to: source
     applies_builders: ["source_gen"]
+    defaults:
+      generate_for:
+        - lib/lang/*.dart
+        - lib/generated/*.dart
 

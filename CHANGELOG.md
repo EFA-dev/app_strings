@@ -1,3 +1,7 @@
+## 1.2.0
+- Add support for custom source file location
+- Add instructions for disabling builders to decrease build time
+  
 ## 1.1.1
 - Update README.md
 
