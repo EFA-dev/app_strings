@@ -2,7 +2,7 @@
 
 import 'package:app_strings/app_strings.dart';
 
-@AppStringsConfig(json: true)
+@AppStringsConfig(json: false, easyLoader: true)
 class AppStringsSource {
   var user = (
     gender: (
