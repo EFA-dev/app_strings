@@ -1,17 +1,29 @@
-name: app_strings_example
-description: A sample project for app_strings.
-version: 1.0.0
-publish_to: none
-# repository: https://github.com/my_org/my_repo
+name: app_string_example
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.6.1
 
 dependencies:
   app_strings:
     path: ../
+  easy_localization: ^3.0.7+1
+  flutter:
+    sdk: flutter
+
+dependency_overrides:
+  path: ^1.9.0
+  meta: ^1.15.0
+
+  
 
 dev_dependencies:
-  lints: ^5.0.0
-  test: ^1.24.0
   build_runner: ^2.4.14
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
