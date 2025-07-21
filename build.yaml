@@ -6,10 +6,9 @@ builders:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "importBuilder"]
     build_extensions: {".dart": [".importer.dart"]}
-    auto_apply: dependents
+    auto_apply: all_packages
     build_to: cache
-    applies_builders: ["source_gen"]
-    runs_before: ["key_builder","loader_builder","json_builder"]
+    applies_builders: ["source_gen"]    
     defaults:
       generate_for:
         - lib/lang/*.dart
@@ -19,7 +18,7 @@ builders:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "keyBuilder"]    
     build_extensions: {".dart": [".key.dart"]}
-    auto_apply: dependents
+    auto_apply: all_packages
     build_to: source
     applies_builders: ["source_gen"]
     defaults:
@@ -31,7 +30,7 @@ builders:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "loaderBuilder"]    
     build_extensions: {".dart": [".loader.dart"]}
-    auto_apply: dependents
+    auto_apply: all_packages
     build_to: source
     applies_builders: ["source_gen"]
     defaults:
@@ -43,7 +42,7 @@ builders:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "jsonBuilder"]    
     build_extensions: {".dart": [".json"]}
-    auto_apply: dependents
+    auto_apply: all_packages
     build_to: source
     applies_builders: ["source_gen"]
     defaults:
