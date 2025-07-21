@@ -1,3 +1,6 @@
+## 1.2.2
+- Update dependencies
+
 ## 1.2.0
 - Add support for custom source file location
 - Add instructions for disabling builders to decrease build time
