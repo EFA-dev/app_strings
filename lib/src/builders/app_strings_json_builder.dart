@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:app_strings/app_strings.dart';
 import 'package:app_strings/src/generators/app_strings_json_generator.dart';
 import 'package:app_strings/src/models/field_tree.dart';
@@ -12,7 +12,7 @@ import 'package:source_gen/source_gen.dart';
 
 class AppStringsJsonBuilder extends GeneratorForAnnotation<AppStringsConfig> {
   @override
-  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
+  generateForAnnotatedElement(Element2 element, ConstantReader annotation, BuildStep buildStep) async {
     ///* Check if the jsonExport annotation is true
     var exportJson = annotation.read("json").boolValue;
     if (exportJson == false) return null;
