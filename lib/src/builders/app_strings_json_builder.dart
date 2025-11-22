@@ -44,7 +44,9 @@ class AppStringsJsonBuilder extends GeneratorForAnnotation<AppStringsConfig> {
       ///* Write the generated json files
       files.forEach((filePath, fileContent) {
         final file = File(filePath);
-        file.delete();
+        if (file.existsSync()) {
+          file.delete();
+        }
       });
 
       return null;

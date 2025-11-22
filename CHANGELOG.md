@@ -1,3 +1,6 @@
+## 1.3.1
+- Fix: Json Builder
+  
 ## 1.3.0
 - Update dependencies
 - Fix: Ensure the custom **JSON builder runs on every execution** of `build_runner`
