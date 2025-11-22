@@ -19,5 +19,5 @@ Builder loaderBuilder(BuilderOptions options) {
 }
 
 Builder jsonBuilder(BuilderOptions options) {
-  return LibraryBuilder(AppStringsJsonBuilder(), generatedExtension: '.temp.dart');
+  return LibraryBuilder(AppStringsJsonBuilder(), generatedExtension: '.json_temp.dart');
 }
