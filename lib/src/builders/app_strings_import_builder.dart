@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:app_strings/app_strings.dart';
 import 'package:app_strings/src/generators/app_strings_source_generator.dart';
 import 'package:app_strings/src/models/field_tree.dart';
@@ -11,7 +11,7 @@ import 'package:source_gen/source_gen.dart';
 
 class AppStringsImportBuilder extends GeneratorForAnnotation<AppStringsConfig> {
   @override
-  Future<String?> generateForAnnotatedElement(Element2 element, ConstantReader annotation, BuildStep buildStep) async {
+  Future<String?> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
     var exclude = annotation.peek("remove")?.stringValue;
 
     var importFields = annotation.peek("import")?.objectValue;
