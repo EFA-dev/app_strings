@@ -41,7 +41,7 @@ builders:
   json_builder:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "jsonBuilder"]    
-    build_extensions: {".dart": []}
+    build_extensions: {".dart": [".json_temp.dart"]}
     auto_apply: root_package
     build_to: source
     applies_builders: ["source_gen"]

@@ -54,8 +54,8 @@ class AppStringsImportBuilder extends GeneratorForAnnotation<AppStringsConfig> {
     );
 
     ///* Write the generated source file
-    var sourceFile = File(buildStep.inputId.path);
     var fileContent = appStringsSourceGenerator.build();
+    var sourceFile = File(buildStep.inputId.path);
     sourceFile.writeAsStringSync(fileContent);
 
     return fileContent;
