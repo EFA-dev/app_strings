@@ -48,10 +48,13 @@ class AppStringsJsonBuilder extends GeneratorForAnnotation<AppStringsConfig> {
     await Future.forEach(files.keys, (filePath) async {
       var sourceFile = File(filePath);
       final fileContent = files[filePath];
+
       if (fileContent != null) {
         await sourceFile.writeAsString(fileContent);
       }
     });
+
+    return "//${DateTime.now().microsecondsSinceEpoch}";
   }
 }
 
