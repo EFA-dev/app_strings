@@ -28,7 +28,7 @@ class EFALangLoaderGenerator {
             refer("\n\n// region [p] \n\n"),
             Class(
               (c) => c
-                ..name = 'AppStringsLoader'
+                ..name = 'EFALangLoader'
                 ..extend = refer('AssetLoader')
                 ..constructors = ListBuilder(
                   [
