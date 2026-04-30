@@ -1,56 +1,5 @@
 builders:
 
-  # The Import builder is creating the cache directory because it modifies the existing file
-  # It runs before all other builders since the newly created file will be used by them
-  importer_builder:
-    import: "package:app_strings/builder.dart"    
-    builder_factories: [ "importBuilder"]
-    build_extensions: {".dart": [".importer.dart"]}
-    auto_apply: root_package
-    build_to: cache
-    applies_builders: ["source_gen"]    
-    defaults:
-      generate_for:
-        - lib/lang/*.dart
-        - lib/generated/*.dart
-
-  key_builder:
-    import: "package:app_strings/builder.dart"    
-    builder_factories: [ "keyBuilder"]    
-    build_extensions: {".dart": [".key.dart"]}
-    auto_apply: root_package
-    build_to: source
-    applies_builders: ["source_gen"]
-    defaults:
-      generate_for:
-        - lib/lang/*.dart
-        - lib/generated/*.dart
-
-  loader_builder:
-    import: "package:app_strings/builder.dart"    
-    builder_factories: [ "loaderBuilder"]    
-    build_extensions: {".dart": [".loader.dart"]}
-    auto_apply: root_package
-    build_to: source
-    applies_builders: ["source_gen"]
-    defaults:
-      generate_for:
-        - lib/lang/*.dart
-        - lib/generated/*.dart
-
-  json_builder:
-    import: "package:app_strings/builder.dart"    
-    builder_factories: [ "jsonBuilder"]    
-    build_extensions: {".dart": [".json_temp.dart"]}
-    auto_apply: root_package
-    build_to: source
-    applies_builders: ["source_gen"]
-    defaults:
-      generate_for:
-        - lib/lang/*.dart
-        - lib/generated/*.dart
-  
-
   efa_lang_import_builder:
     import: "package:app_strings/builder.dart"    
     builder_factories: [ "efaLangImportBuilder"]

@@ -4,8 +4,8 @@ import 'package:app_strings/src/models/field_tree.dart';
 // region [p]
 
 ///Generates JSON files from the given FieldTree
-class AppStringsJsonGenerator {
-  AppStringsJsonGenerator({
+class EFALangJsonGenerator {
+  EFALangJsonGenerator({
     required this.fieldTree,
     required this.root,
     required this.prefix,
