@@ -22,15 +22,15 @@ class FileVisitor extends GeneralizingAstVisitor<void> {
       if (field.initializer.runtimeType != RecordLiteralImpl) continue;
 
       var keyNode = FieldNode(
-        name: field.name.lexeme,
-        path: field.name.lexeme,
+        name: field.name.lexeme.replaceAll("_", ""),
+        path: field.name.lexeme.replaceAll("_", ""),
       );
 
       var record = field.initializer as RecordLiteral;
       var namedExpressions = record.childEntities.whereType<NamedExpression>().toList();
 
       for (var field in namedExpressions) {
-        var fieldName = field.name.label.name;
+        var fieldName = field.name.label.name.replaceAll("_", "");
         var subRecords = field.childEntities.whereType<RecordLiteralImpl>().toList();
 
         var parentNode = FieldNode(

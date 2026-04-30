@@ -50,13 +50,40 @@ builders:
         - lib/lang/*.dart
         - lib/generated/*.dart
   
+
+  efa_lang_import_builder:
+    import: "package:app_strings/builder.dart"    
+    builder_factories: [ "efaLangImportBuilder"]
+    build_extensions: {".dart": [".efa.importer.dart"]}
+    auto_apply: root_package
+    build_to: cache
+    applies_builders: ["source_gen"]    
+
+
   efa_lang_key_builder:
     import: "package:app_strings/builder.dart"    
     builder_factories: ["efaLangKeyBuilder"]    
     build_extensions: 
-      ".dart": [".lang.dart"]
+      ".dart": [".efa.key.dart"]
     auto_apply: root_package
     build_to: source
     applies_builders: ["source_gen"]
    
 
+  efa_lang_loader_builder:
+    import: "package:app_strings/builder.dart"    
+    builder_factories: [ "efaLangLoaderBuilder"]    
+    build_extensions: {".dart": [".efa.loader.dart"]}
+    auto_apply: root_package
+    build_to: source
+    applies_builders: ["source_gen"]
+
+
+  efa_lang_json_builder:
+    import: "package:app_strings/builder.dart"    
+    builder_factories: [ "efaLangJsonBuilder"]    
+    build_extensions: {".dart": [".efa.json_temp.dart"]}
+    auto_apply: root_package
+    build_to: source
+    applies_builders: ["source_gen"]
+ 

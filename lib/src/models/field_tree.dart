@@ -44,7 +44,11 @@ class FieldTree {
     sourceTree.annotations.addAll(annotations);
 
     ///* Add all fields to the keyTree
-    var fieldVisitor = FileVisitor(root: sourceTree, exclude: exclude, addValueField: includeValues);
+    var fieldVisitor = FileVisitor(
+      root: sourceTree,
+      exclude: exclude,
+      addValueField: includeValues,
+    );
 
     classNode.visitChildren(fieldVisitor);
 

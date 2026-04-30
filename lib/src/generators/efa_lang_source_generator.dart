@@ -4,8 +4,8 @@ import 'package:code_builder/code_builder.dart';
 
 // region [p]
 ///*  Regenerate the source file after importing or remove a locale
-class AppStringsSourceGenerator {
-  AppStringsSourceGenerator({
+class EFALangSourceGenerator {
+  EFALangSourceGenerator({
     required this.fieldTree,
     required this.className,
   });
