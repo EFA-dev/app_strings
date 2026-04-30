@@ -20,10 +20,16 @@ class EFALangKeyBuilder extends GeneratorForAnnotation<EFALang> {
     ///* Get the key class name
     // final keyClassName = annotation.read("keyClassName").stringValue;
 
+    var className = element.displayName.replaceAll("_", "");
+    var loaderClassName = "${className}Loader";
+    final loaderPath = buildStep.inputId.changeExtension('.efa.loader.dart').uri.toString();
+
     ///* Generate the key file
     var keyBuilder = EFALangKeyGenerator(
       fieldTree: sourceTree,
-      className: element.displayName.replaceAll("_", ""),
+      className: className,
+      loaderClassName: loaderClassName,
+      loaderPath: loaderPath,
     );
     var fileContent = keyBuilder.build();
 

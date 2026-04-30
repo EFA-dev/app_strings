@@ -6,17 +6,26 @@ import 'package:code_builder/code_builder.dart';
 
 /// Generates a class with EFAKey objects instead of raw Strings.
 class EFALangKeyGenerator {
-  EFALangKeyGenerator({required this.fieldTree, required this.className}) : loaderClassName = "${className}Loader";
+  EFALangKeyGenerator({
+    required this.fieldTree,
+    required this.className,
+    required this.loaderPath,
+    required this.loaderClassName,
+  });
 
   final FieldTree fieldTree;
   final String className;
   final String loaderClassName;
+  final String loaderPath;
 
   /// Builds the final formatted library string.
   String build() {
     var library = Library(
       (library) => library
-        ..directives.add(Directive.import('package:efa_core/efa_core.dart'))
+        ..directives.addAll([
+          Directive.import('package:efa_core/efa_core.dart'),
+          Directive.import(loaderPath),
+        ])
         ..body.addAll(
           [
             refer("// region [p] \n\n"),
