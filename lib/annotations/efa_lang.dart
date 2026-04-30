@@ -5,19 +5,18 @@
 ///* to generate type-safe key structures and translation tables.
 class EFALang {
   const EFALang({
+    required this.path,
     this.generateJson = false,
-    this.generateEasyLoader = false,
     this.import,
     this.removeLocale,
     this.addRegionComments = true,
   });
 
+  final String path;
+
   ///* Exports translation fields as JSON files under 'assets/translations/'.
   ///* Useful for external translation tools or legacy support.
   final bool generateJson;
-
-  ///* Exports translation fields as a Dart file compatible with the easy_localization loader.
-  final bool generateEasyLoader;
 
   ///* Used to import localization data from an external JSON file into the current class.
   ///* Example: EFAImport(locale: "en_US", path: "lib/lang/imports/en_US.json")
