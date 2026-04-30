@@ -49,4 +49,14 @@ builders:
       generate_for:
         - lib/lang/*.dart
         - lib/generated/*.dart
+  
+  efa_lang_key_builder:
+    import: "package:app_strings/builder.dart"    
+    builder_factories: ["efaLangKeyBuilder"]    
+    build_extensions: 
+      ".dart": [".lang.dart"]
+    auto_apply: root_package
+    build_to: source
+    applies_builders: ["source_gen"]
+   
 
