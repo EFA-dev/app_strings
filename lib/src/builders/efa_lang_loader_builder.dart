@@ -22,7 +22,10 @@ class EFALangLoaderBuilder extends GeneratorForAnnotation<EFALang> {
     }
 
     ///* Generate the loader file
-    var assetBuilder = EFALangLoaderGenerator(fieldTree: sourceTree);
+    var assetBuilder = EFALangLoaderGenerator(
+      fieldTree: sourceTree,
+      className: element.displayName.replaceAll("_", ""),
+    );
     var fileContent = assetBuilder.build();
 
     return fileContent;

@@ -2,7 +2,7 @@
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:app_strings/annotations/efa_lang.dart';
-import 'package:app_strings/src/generators/efa_strings_key_generator.dart';
+import 'package:app_strings/src/generators/efa_lang_key_generator.dart';
 import 'package:app_strings/src/models/field_tree.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
@@ -21,9 +21,9 @@ class EFALangKeyBuilder extends GeneratorForAnnotation<EFALang> {
     // final keyClassName = annotation.read("keyClassName").stringValue;
 
     ///* Generate the key file
-    var keyBuilder = EFAStringsKeyGenerator(
+    var keyBuilder = EFALangKeyGenerator(
       fieldTree: sourceTree,
-      className: element.displayName.replaceAll("_", "").replaceAll("Strings", "Texts"),
+      className: element.displayName.replaceAll("_", ""),
     );
     var fileContent = keyBuilder.build();
 

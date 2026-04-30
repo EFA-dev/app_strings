@@ -1,34 +1,41 @@
-import 'package:app_strings/src/models/efa_lang_field_node.dart';
-
-///* Assuming Formatter is your custom utility
+import 'package:app_strings/src/models/field_tree.dart';
 import 'package:app_strings/src/utils/formatter.dart';
 import 'package:code_builder/code_builder.dart';
 
 // region [p]
 
-///* Generates paths for keys using the EFALangTree structure
+/// Generates a class with EFAKey objects instead of raw Strings.
 class EFALangKeyGenerator {
-  EFALangKeyGenerator({required this.tree, required this.className});
+  EFALangKeyGenerator({required this.fieldTree, required this.className}) : loaderClassName = "${className}Loader";
 
-  final EFALangTree tree;
+  final FieldTree fieldTree;
   final String className;
+  final String loaderClassName;
 
-  ///* Builds the key class with EFALang standards
+  /// Builds the final formatted library string.
   String build() {
-    ///* Automatically prefixing the class name for the keys
-    final keyClassName = '_${className}Keys';
-
     var library = Library(
       (library) => library
+        ..directives.add(Directive.import('package:efa_core/efa_core.dart'))
         ..body.addAll(
           [
             refer("// region [p] \n\n"),
             Class(
               (c) => c
-                ..name = keyClassName
-                ..fields.addAll(_buildField()),
+                ..name = className
+                ..fields.addAll([
+                  // 1. Static reference to the local loader
+                  Field((f) => f
+                    ..name = 'loader'
+                    ..static = true
+                    ..modifier = FieldModifier.constant
+                    ..assignment = refer('$loaderClassName()').code),
+
+                  // 2. Unpacked EFAKey fields
+                  ..._buildUnpackedFields(),
+                ]),
             ),
-            refer("\n // [endregion]")
+            refer("\n// endregion")
           ],
         ),
     );
@@ -36,35 +43,40 @@ class EFALangKeyGenerator {
     return Formatter.format(library);
   }
 
-  ///* Builds Record type fields from the root children
-  List<Field> _buildField() {
-    return tree.root.children.values.map((node) {
+  /// Skip the root node and convert children into EFAKey fields or Records.
+  List<Field> _buildUnpackedFields() {
+    final rootNodes = fieldTree.fields;
+
+    final List<FieldNode> nodesToProcess =
+        rootNodes.isNotEmpty && rootNodes.first.children.isNotEmpty ? rootNodes.first.children : rootNodes;
+
+    return nodesToProcess.map((field) {
       return Field(
-        (p0) => p0
+        (f) => f
           ..modifier = FieldModifier.constant
           ..static = true
-          ..name = node.name
-          ..assignment = literalRecord([], _buildSubField(node.children.values.toList())).code,
+          ..name = field.name
+          ..assignment = _generateAssignment(field).code,
       );
     }).toList();
   }
 
-  ///* Builds fields children recursively
-  Map<String, dynamic> _buildSubField(List<EFALangFieldNode> children) {
-    var map = <String, dynamic>{};
+  /// Recursive helper to create EFAKey or Record of EFAKeys
+  Expression _generateAssignment(FieldNode field) {
+    if (field.children.isEmpty) {
+      // Leaf Node: Construct EFAKey(path, loader)
+      return refer('EFAKey').call([
+        literalString(field.path),
+        refer('loader'),
+      ]);
+    } else {
+      // Branch Node: Create a Record of nested EFAKeys
+      final Map<String, Expression> recordFields = {
+        for (var child in field.children) child.name: _generateAssignment(child)
+      };
 
-    var processedEntries = children.map((node) {
-      if (node.children.isEmpty) {
-        ///* Leaf node: return the dot-separated path
-        return MapEntry(node.name, node.path);
-      } else {
-        ///* Branch node: recurse further into the record
-        return MapEntry(node.name, literalRecord([], _buildSubField(node.children.values.toList())));
-      }
-    });
-
-    map.addEntries(processedEntries);
-    return map;
+      return literalRecord([], recordFields);
+    }
   }
 }
 

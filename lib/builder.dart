@@ -1,12 +1,12 @@
 // 1
-import 'package:app_strings/src/builders/app_strings_import_builder.dart';
-import 'package:app_strings/src/builders/app_strings_json_builder.dart';
-import 'package:app_strings/src/builders/app_strings_key_builder.dart';
-import 'package:app_strings/src/builders/app_strings_loader_builder.dart';
 import 'package:app_strings/src/builders/efa_lang_import_builder.dart';
 import 'package:app_strings/src/builders/efa_lang_json_builder.dart';
 import 'package:app_strings/src/builders/efa_lang_key_builder.dart';
 import 'package:app_strings/src/builders/efa_lang_loader_builder.dart';
+import 'package:app_strings/src/builders/old/app_strings_import_builder.dart';
+import 'package:app_strings/src/builders/old/app_strings_json_builder.dart';
+import 'package:app_strings/src/builders/old/app_strings_key_builder.dart';
+import 'package:app_strings/src/builders/old/app_strings_loader_builder.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 

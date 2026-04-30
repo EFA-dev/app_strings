@@ -4,13 +4,16 @@ import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
 
 //#region [p]
-///* Generates easy_localization loader
+
 class EFALangLoaderGenerator {
   EFALangLoaderGenerator({
     required this.fieldTree,
+    required this.className,
   });
 
   final FieldTree fieldTree;
+  final String className;
+
   Set<String> get locales => fieldTree.locales;
 
   String build() {
@@ -19,17 +22,16 @@ class EFALangLoaderGenerator {
         ..ignoreForFile.add("constant_identifier_names")
         ..directives.addAll(
           [
-            Directive.import("dart:ui"),
-            Directive.import("package:easy_localization/easy_localization.dart"),
+            Directive.import('package:efa_core/efa_core.dart'),
           ],
         )
         ..body.addAll(
           [
-            refer("\n\n// region [p] \n\n"),
+            refer("// region [p] \n\n"),
             Class(
               (c) => c
-                ..name = 'EFALangLoader'
-                ..extend = refer('AssetLoader')
+                ..name = "${className}Loader"
+                ..extend = refer('EFALangLoader')
                 ..constructors = ListBuilder(
                   [
                     Constructor(
@@ -37,25 +39,18 @@ class EFALangLoaderGenerator {
                     ),
                   ],
                 )
+
+                /// EFAKey'in erişeceği zorunlu getter
                 ..methods.add(
                   Method(
-                    (MethodBuilder b) => b
-                      ..name = 'load'
+                    (m) => m
+                      ..name = 'locales'
                       ..annotations.add(refer("override"))
-                      ..returns = refer("Future<Map<String, dynamic>?>")
-                      ..requiredParameters = ListBuilder<Parameter>([
-                        Parameter(
-                          (p) => p
-                            ..name = "path"
-                            ..type = refer("String"),
-                        ),
-                        Parameter(
-                          (p) => p
-                            ..name = "locale"
-                            ..type = refer("Locale"),
-                        ),
-                      ])
-                      ..body = const Code("return Future.value(mapLocales[locale.toString()]);"),
+                      ..type = MethodType.getter
+                      ..returns = refer("Map<String, Map<String, dynamic>>")
+                      // lambda: => mapLocales;
+                      ..lambda = true
+                      ..body = const Code("mapLocales"),
                   ),
                 )
                 ..fields.addAll([

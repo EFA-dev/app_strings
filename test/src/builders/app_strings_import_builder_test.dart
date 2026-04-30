@@ -5,7 +5,7 @@ import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:app_strings/annotations/app_strings_config.dart';
-import 'package:app_strings/src/generators/app_strings_source_generator.dart';
+import 'package:app_strings/src/generators/old/app_strings_source_generator.dart';
 import 'package:app_strings/src/models/field_tree.dart';
 import 'package:app_strings/src/visitors/file_visitor.dart';
 import 'package:app_strings/src/visitors/map_visitor.dart';
