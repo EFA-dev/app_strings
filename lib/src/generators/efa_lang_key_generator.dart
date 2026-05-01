@@ -4,88 +4,80 @@ import 'package:code_builder/code_builder.dart';
 
 // region [p]
 
-/// Generates a class with EFAKey objects instead of raw Strings.
+/// Generates EFALang compatible keys and records using FieldTree structure
 class EFALangKeyGenerator {
   EFALangKeyGenerator({
     required this.fieldTree,
-    required this.className,
-    required this.loaderPath,
-    required this.loaderClassName,
+    this.className = "AppStrings",
   });
 
   final FieldTree fieldTree;
   final String className;
-  final String loaderClassName;
-  final String loaderPath;
 
-  /// Builds the final formatted library string.
   String build() {
-    var library = Library(
-      (library) => library
-        ..directives.addAll([
-          Directive.import('package:efa_core/efa_core.dart'),
-          Directive.import(loaderPath),
-        ])
-        ..body.addAll(
-          [
-            refer("// region [p] \n\n"),
-            Class(
-              (c) => c
-                ..name = className
-                ..fields.addAll([
-                  // 1. Static reference to the local loader
-                  Field((f) => f
-                    ..name = 'loader'
-                    ..static = true
-                    ..modifier = FieldModifier.constant
-                    ..assignment = refer('$loaderClassName()').code),
-
-                  // 2. Unpacked EFAKey fields
-                  ..._buildUnpackedFields(),
-                ]),
-            ),
-            refer("\n// endregion")
-          ],
-        ),
+    final library = Library(
+      (l) => l
+        ..ignoreForFile.addAll(['unused_field', 'unused_element', 'non_constant_identifier_names'])
+        ..body.addAll([
+          refer("import 'package:efa_core/efa_core.dart';\n"),
+          Class(
+            (c) => c
+              ..name = className
+              ..fields.addAll(_buildTopLevelFields()),
+          ),
+        ]),
     );
 
     return Formatter.format(library);
   }
 
-  /// Skip the root node and convert children into EFAKey fields or Records.
-  List<Field> _buildUnpackedFields() {
-    final rootNodes = fieldTree.fields;
+  /// Builds the top-level fields of the class
+  List<Field> _buildTopLevelFields() {
+    return fieldTree.fields.map((field) {
+      // Bir node'un çocuklarının hepsi valueNode ise, bu bir yaprak düğümdür (Leaf).
+      final isLeaf = field.children.every((child) => child.valueNode);
 
-    final List<FieldNode> nodesToProcess =
-        rootNodes.isNotEmpty && rootNodes.first.children.isNotEmpty ? rootNodes.first.children : rootNodes;
-
-    return nodesToProcess.map((field) {
-      return Field(
-        (f) => f
-          ..modifier = FieldModifier.constant
-          ..static = true
-          ..name = field.name
-          ..assignment = _generateAssignment(field).code,
-      );
+      return Field((f) => f
+        ..static = true
+        ..modifier = FieldModifier.final$
+        ..name = field.name
+        ..assignment = isLeaf ? _createEfaKeyExpression(field).code : _buildRecordExpression(field.children).code);
     }).toList();
   }
 
-  /// Recursive helper to create EFAKey or Record of EFAKeys
-  Expression _generateAssignment(FieldNode field) {
-    if (field.children.isEmpty) {
-      // Leaf Node: Construct EFAKey(path, loader)
-      return refer('EFAKey').call([
-        literalString(field.path),
-        refer('loader'),
-      ]);
-    } else {
-      // Branch Node: Create a Record of nested EFAKeys
-      final Map<String, Expression> recordFields = {
-        for (var child in field.children) child.name: _generateAssignment(child)
-      };
+  /// Recursively builds Record structures or EFAKey instances
+  Expression _buildRecordExpression(List<FieldNode> children) {
+    final Map<String, Expression> recordFields = {};
 
-      return literalRecord([], recordFields);
+    // Sadece value olmayan (alt dal olan) çocukları işliyoruz
+    final structuralChildren = children.where((c) => !c.valueNode).toList();
+
+    for (var child in structuralChildren) {
+      final isLeaf = child.children.every((c) => c.valueNode);
+
+      if (isLeaf) {
+        recordFields[child.name] = _createEfaKeyExpression(child);
+      } else {
+        recordFields[child.name] = _buildRecordExpression(child.children);
+      }
     }
+
+    return literalRecord([], recordFields);
+  }
+
+  /// Creates an EFAKey expression by extracting values from children
+  Expression _createEfaKeyExpression(FieldNode node) {
+    // valueNode olan çocukları bulup bir map oluşturuyoruz (en_US: "Hello", tr_TR: "Merhaba")
+    final Map<String, String> languageData = {
+      for (var child in node.children.where((c) => c.valueNode)) child.name: child.value ?? ""
+    };
+
+    return refer('EFAKey').newInstance([], {
+      'path': literalString(node.path),
+      'data': Method((m) => m
+        ..lambda = true
+        ..body = literalMap(languageData).code).closure,
+    });
   }
 }
 

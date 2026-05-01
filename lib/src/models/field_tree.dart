@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:app_strings/annotations/app_strings_config.dart';
+import 'package:app_strings/src/models/import.dart';
 import 'package:app_strings/src/utils/reserved.dart';
 import 'package:app_strings/src/visitors/file_visitor.dart';
 import 'package:app_strings/src/visitors/map_visitor.dart';

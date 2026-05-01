@@ -50,7 +50,7 @@ class FileVisitor extends GeneralizingAstVisitor<void> {
     final namedExpressions = record.fields.whereType<NamedExpression>();
 
     for (var namedExpr in namedExpressions) {
-      final fieldName = namedExpr.name.label.name.replaceAll("_", "");
+      final fieldName = namedExpr.name.label.name;
       final expression = namedExpr.expression;
 
       // 1. Reserved words kontrolü (Metadataları dışlamak için)

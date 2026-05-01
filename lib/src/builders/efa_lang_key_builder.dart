@@ -1,7 +1,7 @@
 // region [p]
 
 import 'package:analyzer/dart/element/element.dart';
-import 'package:app_strings/annotations/efa_lang.dart';
+import 'package:app_strings/src/annotations/efa_lang.dart';
 import 'package:app_strings/src/generators/efa_lang_key_generator.dart';
 import 'package:app_strings/src/models/field_tree.dart';
 import 'package:build/build.dart';
@@ -12,7 +12,7 @@ class EFALangKeyBuilder extends GeneratorForAnnotation<EFALang> {
   @override
   generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
     ///* Build the FieldTree from the source file
-    var sourceTree = await FieldTree.fromAst(buildStep, includeValues: false);
+    var sourceTree = await FieldTree.fromAst(buildStep);
     if (sourceTree == null) {
       return null;
     }
@@ -20,16 +20,15 @@ class EFALangKeyBuilder extends GeneratorForAnnotation<EFALang> {
     ///* Get the key class name
     // final keyClassName = annotation.read("keyClassName").stringValue;
 
+    // var loaderClassName = "${className}Loader";
+    // final loaderPath = buildStep.inputId.changeExtension('.efa.loader.dart').uri.toString();
+
     var className = element.displayName.replaceAll("_", "");
-    var loaderClassName = "${className}Loader";
-    final loaderPath = buildStep.inputId.changeExtension('.efa.loader.dart').uri.toString();
 
     ///* Generate the key file
     var keyBuilder = EFALangKeyGenerator(
       fieldTree: sourceTree,
       className: className,
-      loaderClassName: loaderClassName,
-      loaderPath: loaderPath,
     );
     var fileContent = keyBuilder.build();
 
