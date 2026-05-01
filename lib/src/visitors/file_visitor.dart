@@ -1,5 +1,5 @@
+import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/src/dart/ast/ast.dart';
 import 'package:app_strings/src/models/field_tree.dart';
 import 'package:app_strings/src/utils/reserved.dart';
 
@@ -8,44 +8,36 @@ import 'package:app_strings/src/utils/reserved.dart';
 class FileVisitor extends GeneralizingAstVisitor<void> {
   FileVisitor({
     required this.root,
+    required this.rootPath, // @EFALang(path: "income")
     this.exclude,
     this.addValueField = true,
   });
 
   final FieldTree root;
+  final String rootPath;
   final bool addValueField;
   final String? exclude;
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    for (VariableDeclaration field in node.fields.variables) {
-      if (field.initializer.runtimeType != RecordLiteralImpl) continue;
+    // Sadece static alanları tara
+    if (!node.isStatic) return;
 
+    for (var field in node.fields.variables) {
+      final initializer = field.initializer;
+      if (initializer is! RecordLiteral) continue;
+
+      final fieldName = field.name.lexeme.replaceAll("_", "");
+
+      // Her static const field bir kök düğüm oluşturur
+      // Path: "income.title"
       var keyNode = FieldNode(
-        name: field.name.lexeme.replaceAll("_", ""),
-        path: field.name.lexeme.replaceAll("_", ""),
+        name: fieldName,
+        path: rootPath.isEmpty ? fieldName : "$rootPath.$fieldName",
       );
 
-      var record = field.initializer as RecordLiteral;
-      var namedExpressions = record.childEntities.whereType<NamedExpression>().toList();
-
-      for (var field in namedExpressions) {
-        var fieldName = field.name.label.name.replaceAll("_", "");
-        var subRecords = field.childEntities.whereType<RecordLiteralImpl>().toList();
-
-        var parentNode = FieldNode(
-          parent: keyNode,
-          name: fieldName,
-          path: "${keyNode.path}.$fieldName",
-        );
-
-        ///* Add sub nodes
-        for (var subRecord in subRecords) {
-          _buildRecord(parentNode, subRecord);
-        }
-
-        keyNode.children.add(parentNode);
-      }
+      // Record içeriğini recursive olarak işle
+      _buildRecord(keyNode, initializer);
 
       root.fields.add(keyNode);
     }
@@ -54,46 +46,41 @@ class FileVisitor extends GeneralizingAstVisitor<void> {
   }
 
   void _buildRecord(FieldNode parent, RecordLiteral record) {
-    var namedExpressions = record.childEntities.whereType<NamedExpression>().toList();
+    // Record içindeki NamedExpression'ları (add: ..., en_US: ...) al
+    final namedExpressions = record.fields.whereType<NamedExpression>();
 
-    for (var field in namedExpressions) {
-      var fieldName = field.name.label.name;
-      var subRecords = field.childEntities.whereType<RecordLiteralImpl>().toList();
+    for (var namedExpr in namedExpressions) {
+      final fieldName = namedExpr.name.label.name.replaceAll("_", "");
+      final expression = namedExpr.expression;
 
-      ///* Exclude reserved words
+      // 1. Reserved words kontrolü (Metadataları dışlamak için)
       if (addValueField == false && reservedWords.contains(fieldName)) continue;
 
-      if (subRecords.isNotEmpty) {
-        ///* Add sub nodes
-        var valueParent = FieldNode(
+      if (expression is RecordLiteral) {
+        // Eğer bir Record ise alt daldır (Branch)
+        var subNode = FieldNode(
           name: fieldName,
           path: "${parent.path}.$fieldName",
           parent: parent,
         );
 
-        for (var subRecord in subRecords) {
-          _buildRecord(valueParent, subRecord);
-        }
-
-        parent.children.add(valueParent);
-      } else {
+        _buildRecord(subNode, expression);
+        parent.children.add(subNode);
+      } else if (expression is SimpleStringLiteral) {
+        // 2. Exclude ve addValueField kontrolleri (Yaprak düğüm için)
         if (addValueField == false || fieldName == exclude) continue;
 
-        var stringNode = field.childEntities.whereType<SimpleStringLiteral>().toList();
+        // Eğer bir String ise çeviri değeridir (en_US, tr_TR)
+        var valueNode = FieldNode(
+          name: fieldName,
+          value: expression.value,
+          path: parent.path, // Mantıksal yolu parent ile aynı
+          parent: parent,
+          valueNode: true,
+        );
 
-        ///* Add value node
-        if (stringNode.isNotEmpty) {
-          var valueNode = FieldNode(
-            name: fieldName,
-            value: stringNode.first.value,
-            path: "${parent.path}.$fieldName",
-            parent: parent,
-            valueNode: true,
-          );
-
-          parent.children.add(valueNode);
-          root.addValueField(path: parent.path, fieldNode: valueNode);
-        }
+        parent.children.add(valueNode);
+        root.addValueField(path: parent.path, fieldNode: valueNode);
       }
     }
   }

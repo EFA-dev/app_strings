@@ -43,11 +43,28 @@ class FieldTree {
     var annotations = classNode.childEntities.whereType<Annotation>();
     sourceTree.annotations.addAll(annotations);
 
+    // 2. Extract rootPath from @EFALang(path: "...")
+    String rootPath = "";
+    for (var annotation in classNode.metadata) {
+      if (annotation.name.name == 'EFALang') {
+        final args = annotation.arguments?.arguments;
+        // path: "..." argümanını bul
+        final pathArg = args
+            ?.whereType<NamedExpression>()
+            .firstWhere((e) => e.name.label.name == 'path', orElse: () => null as dynamic);
+
+        if (pathArg != null && pathArg.expression is StringLiteral) {
+          rootPath = (pathArg.expression as StringLiteral).stringValue ?? "";
+        }
+      }
+    }
+
     ///* Add all fields to the keyTree
     var fieldVisitor = FileVisitor(
       root: sourceTree,
       exclude: exclude,
       addValueField: includeValues,
+      rootPath: rootPath,
     );
 
     classNode.visitChildren(fieldVisitor);
