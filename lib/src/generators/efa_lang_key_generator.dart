@@ -71,25 +71,19 @@ class EFALangKeyGenerator {
     return literalRecord([], recordFields);
   }
 
-  /// Creates an EFALocalizationManager.register expression
+  /// Creates an EFAKey.register(...) expression that returns a String
   Expression _createRegisterExpression(FieldNode node) {
     final Map<String, String> languageData = {
       for (var child in node.children.where((c) => c.valueNode)) child.name: child.value ?? ""
     };
 
-    // EFALocalizationManager.register("path", (path) => EFAKey(...))
-    return refer('EFALocalizationManager').newInstanceNamed('register', [
-      literalString(node.path),
-      Method((m) => m
-        ..requiredParameters.add(Parameter((p) => p..name = 'path'))
+    // EFAKey.register(path: "path", data: () => {"en_US": "...", ...})
+    return refer('EFAKey').newInstanceNamed('register', [], {
+      'path': literalString(node.path),
+      'data': Method((dm) => dm
         ..lambda = true
-        ..body = refer('EFAKey').newInstance([], {
-          'path': refer('path'), // Injected path
-          'data': Method((dm) => dm
-            ..lambda = true
-            ..body = literalMap(languageData).code).closure,
-        }).code).closure,
-    ]);
+        ..body = literalMap(languageData).code).closure,
+    });
   }
 }
 
