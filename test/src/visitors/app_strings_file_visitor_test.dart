@@ -25,10 +25,10 @@
 //         var keyTree = FieldTree();
 //         var annotations = classNode.childEntities.whereType<Annotation>();
 
-//         ///* Add all annotations to the keyTree
+//         /// Add all annotations to the keyTree
 //         keyTree.annotations.addAll(annotations);
 
-//         ///* Add all fields to the keyTree
+//         /// Add all fields to the keyTree
 //         var fieldVisitor = FileVisitor(
 //           root: keyTree,
 //           addValueField: true,

@@ -13,7 +13,7 @@ import 'package:source_gen/source_gen.dart';
 class EFALangJsonBuilder extends GeneratorForAnnotation<EFALang> {
   @override
   generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
-    ///* Remove the locale file
+    /// Remove the locale file
     var locale = annotation.peek("remove")?.stringValue;
     if (locale != null) {
       var jsonFilePath = p.setExtension(p.withoutExtension(buildStep.inputId.path), ".efa.$locale.json");
@@ -23,13 +23,13 @@ class EFALangJsonBuilder extends GeneratorForAnnotation<EFALang> {
       }
     }
 
-    ///* Build the FieldTree from the source file
+    /// Build the FieldTree from the source file
     var sourceTree = await FieldTree.fromAst(buildStep);
     if (sourceTree == null) {
       return null;
     }
 
-    ///* Generate the json files
+    /// Generate the json files
     var file = File(buildStep.inputId.path);
     var jsonGenerator = EFALangJsonGenerator(
       fieldTree: sourceTree,
@@ -38,10 +38,10 @@ class EFALangJsonBuilder extends GeneratorForAnnotation<EFALang> {
     );
     var files = jsonGenerator.build();
 
-    ///* Check if the jsonExport annotation is true
+    /// Check if the jsonExport annotation is true
     var exportJson = annotation.read("generateJson").boolValue;
     if (exportJson == false) {
-      ///* Write the generated json files
+      /// Write the generated json files
       files.forEach((filePath, fileContent) {
         final file = File(filePath);
         if (file.existsSync()) {

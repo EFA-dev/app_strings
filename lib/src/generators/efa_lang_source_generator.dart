@@ -3,7 +3,7 @@ import 'package:app_strings/src/utils/formatter.dart';
 import 'package:code_builder/code_builder.dart';
 
 // region [p]
-///*  Regenerate the source file after importing or remove a locale
+///  Regenerate the source file after importing or remove a locale
 class EFALangSourceGenerator {
   EFALangSourceGenerator({
     required this.fieldTree,
@@ -38,7 +38,7 @@ class EFALangSourceGenerator {
     return Formatter.format(library);
   }
 
-  ///* Builds Record type fields
+  /// Builds Record type fields
   List<Field> _buildField() {
     return fieldTree.fields.map((field) {
       return Field(
@@ -49,7 +49,7 @@ class EFALangSourceGenerator {
     }).toList();
   }
 
-  ///* Builds fields children
+  /// Builds fields children
   Map<String, dynamic> _buildSubField(List<FieldNode> children) {
     var map = <String, dynamic>{};
 

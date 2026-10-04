@@ -41,7 +41,7 @@
 //   test('Test for map to field tree', () async {
 //     var import = Import(locale: "tr_TR", path: "test/lang/tr_TR.json");
 
-//     ///* Build the FieldTree from the JSON file
+//     /// Build the FieldTree from the JSON file
 //     var jsonFieldTree = await FieldTree.fromJson(import);
 
 //     if (jsonFieldTree == null) {
@@ -49,7 +49,7 @@
 //       return;
 //     }
 
-//     ///* Generate the source file
+//     /// Generate the source file
 //     var appStringsSourceGenerator = AppStringsSourceGenerator(
 //       fieldTree: jsonFieldTree,
 //       className: "AppStringsSource",

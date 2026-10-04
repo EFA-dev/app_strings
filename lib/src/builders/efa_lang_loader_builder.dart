@@ -9,13 +9,13 @@ import 'package:source_gen/source_gen.dart';
 class EFALangLoaderBuilder extends GeneratorForAnnotation<EFALang> {
   @override
   generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
-    ///* Build the FieldTree from the source file
+    /// Build the FieldTree from the source file
     var sourceTree = await FieldTree.fromAst(buildStep);
     if (sourceTree == null) {
       return null;
     }
 
-    ///* Generate the loader file
+    /// Generate the loader file
     var assetBuilder = EFALangLoaderGenerator(
       fieldTree: sourceTree,
       className: element.displayName.replaceAll("_", ""),

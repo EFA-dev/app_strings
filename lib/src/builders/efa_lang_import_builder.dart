@@ -19,7 +19,7 @@ class EFALangImportBuilder extends GeneratorForAnnotation<EFALang> {
     var importLocale = importFields?.getField("locale")?.toStringValue();
     var path = importFields?.getField("path")?.toStringValue();
 
-    ///* Prevent the builder from running unnecessarily
+    /// Prevent the builder from running unnecessarily
     if (exclude == null && importFields == null) {
       return null;
     }
@@ -32,29 +32,29 @@ class EFALangImportBuilder extends GeneratorForAnnotation<EFALang> {
       );
     }
 
-    ///* Build the FieldTree from the JSON file
+    /// Build the FieldTree from the JSON file
     var jsonFieldTree = await FieldTree.fromJson(import);
 
-    ///* Build the FieldTree from the source file
+    /// Build the FieldTree from the source file
     var sourceTree = await FieldTree.fromAst(buildStep, exclude: exclude);
 
-    ///* If both trees are null, return null
+    /// If both trees are null, return null
     if (sourceTree == null && jsonFieldTree == null) {
       print("ERROR: No fields found in the source file or the JSON file");
       return null;
     }
 
-    ///* Combine the sourceTree with the jsonFieldTree
-    ///* If the sourceTree is null, use the jsonFieldTree
+    /// Combine the sourceTree with the jsonFieldTree
+    /// If the sourceTree is null, use the jsonFieldTree
     var combinedFieldTree = sourceTree == null ? jsonFieldTree! : sourceTree.combine(jsonFieldTree);
 
-    ///* Generate the source file
+    /// Generate the source file
     var efaLangSourceGenerator = EFALangSourceGenerator(
       fieldTree: combinedFieldTree,
       className: element.displayName,
     );
 
-    ///* Write the generated source file
+    /// Write the generated source file
     var fileContent = efaLangSourceGenerator.build();
     var sourceFile = File(buildStep.inputId.path);
     sourceFile.writeAsStringSync(fileContent);
